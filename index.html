@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3 completo</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #quizForm {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question p {
+            font-size: 1.2em;
+            color: #444;
+        }
+        .question label {
+            display: block;
+            padding: 8px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        .response {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .correct, .incorrect {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #result button {
+            background-color: #28a745;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        #result button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de 40 Preguntas</h1>
+
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" class="btn" onclick="showResults()">Comprobar</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+        { question: "¿Cuál es la principal diferencia entre coste y gasto?", answers: ["El coste se refiere a la adquisición de factores productivos y el gasto a las adquisiciones una vez el producto está terminado", "El coste es el pago por materiales mientras que el gasto solo es relacionado con los salarios", "El coste se refiere a los recursos adquiridos y el gasto a los ingresos generados"], correctAnswer: 0, justification: "El coste implica los pagos realizados en la actividad productiva, mientras que el gasto se refiere a los pagos que ocurren después de la producción, como los de distribución o administración." },
+
+{ question: "¿Qué factores influyen en la elección de la localización de una planta de producción?", answers: ["La proximidad a los competidores y los impuestos", "El precio de las materias primas, mano de obra y la infraestructura disponible", "Solo la proximidad a los proveedores"], correctAnswer: 1, justification: "La localización se determina por varios factores, incluyendo el costo de las materias primas, la mano de obra disponible, y la infraestructura, lo cual afecta tanto a los costos de producción como a la eficiencia." },
+
+{ question: "¿Cómo se calcula el punto muerto de una empresa?", answers: ["Punto muerto = Costes fijos / Precio de venta por unidad", "Punto muerto = Costes fijos / (Precio de venta - Coste variable medio)", "Punto muerto = Costes variables / Costes fijos"], correctAnswer: 1, justification: "El punto muerto se calcula como los costes fijos divididos entre el margen de contribución (precio de venta por unidad menos el coste variable medio), indicando cuántas unidades deben venderse para cubrir todos los costes." },
+
+{ question: "¿Qué es la productividad total y cómo se mide?", answers: ["La productividad total mide la cantidad de productos por cada trabajador", "La productividad total mide la relación entre la producción total y la cantidad total de recursos empleados", "La productividad total mide la eficiencia de la maquinaria"], correctAnswer: 1, justification: "La productividad total mide la relación entre la producción obtenida y los recursos empleados, considerando todos los factores involucrados en el proceso productivo." },
+
+{ question: "¿Qué es el coste marginal en un proceso productivo?", answers: ["El coste adicional de producir una unidad adicional de producto", "El coste de las materias primas para un periodo específico", "El coste total dividido entre las unidades producidas"], correctAnswer: 0, justification: "El coste marginal es el aumento en el coste total como resultado de producir una unidad adicional de producto." },
+
+{ question: "¿Qué diferencia hay entre costes fijos y costes variables?", answers: ["Los costes fijos no cambian con el volumen de producción, mientras que los variables sí lo hacen", "Los costes fijos son más altos que los costes variables", "Los costes fijos solo son aplicables a la producción a gran escala"], correctAnswer: 0, justification: "Los costes fijos permanecen constantes independientemente de la cantidad producida, mientras que los costes variables aumentan o disminuyen según el volumen de producción." },
+
+{ question: "¿Qué factores externos pueden afectar la productividad de una empresa?", answers: ["El clima y la política económica del país", "Solo el nivel de tecnología utilizada", "Las decisiones internas de gestión"], correctAnswer: 0, justification: "Los factores externos como las condiciones climáticas y la política económica pueden influir en la productividad, afectando la disponibilidad de recursos y la demanda del mercado." },
+
+{ question: "¿Qué significa eficiencia en el contexto de la producción?", answers: ["Lograr los mejores resultados con los menores costos posibles", "Producir la mayor cantidad posible de productos", "Reducir el número de empleados en la producción"], correctAnswer: 0, justification: "La eficiencia implica lograr los mejores resultados posibles utilizando la menor cantidad de recursos, como tiempo, materiales y mano de obra." },
+
+{ question: "¿Qué es la capacidad de adaptación en la gestión de la producción?", answers: ["La habilidad de la empresa para ajustar su producción a cambios en el diseño de productos o en la demanda del mercado", "La velocidad con la que la empresa puede producir más unidades", "La capacidad de la maquinaria para adaptarse a diferentes tipos de materiales"], correctAnswer: 0, justification: "La capacidad de adaptación se refiere a la habilidad de una empresa para ajustar su producción a cambios en las necesidades del mercado o en el diseño del producto." },
+
+{ question: "¿Qué implica un análisis de coste-beneficio en la producción?", answers: ["Determinar si los ingresos generados cubren los costes de producción", "Evaluar si el coste de los insumos es menor que el de los productos finales", "Determinar si es más barato producir o comprar los materiales necesarios"], correctAnswer: 0, justification: "El análisis de coste-beneficio se realiza para evaluar si los ingresos derivados de la producción cubren los costos y generarán una rentabilidad adecuada." },
+
+{ question: "¿Cómo impactan las economías de escala en las grandes empresas?", answers: ["Aumentan los costos unitarios de producción", "Permiten reducir los costos unitarios a medida que aumenta la producción", "No tienen ningún impacto significativo en los costos"], correctAnswer: 1, justification: "Las economías de escala permiten a las grandes empresas reducir los costos unitarios de producción al aumentar el volumen de producción, lo que genera ventajas competitivas." },
+
+{ question: "¿Qué es un coste directo?", answers: ["Un coste que no se puede imputar directamente a un producto específico", "Un coste que se puede atribuir de manera clara a la fabricación de un producto", "Un coste asociado a la administración de la empresa"], correctAnswer: 1, justification: "Los costes directos son aquellos que se pueden asignar directamente a la producción de un bien o servicio, como el costo de materiales y mano de obra." },
+
+{ question: "¿Por qué es importante la planificación de inventarios?", answers: ["Para evitar sobreproducción y escasez de productos", "Para maximizar el número de productos disponibles sin considerar el costo", "Solo para gestionar las existencias de productos terminados"], correctAnswer: 0, justification: "La planificación de inventarios ayuda a balancear la producción y evitar tanto la sobreproducción como la falta de productos, lo cual optimiza la eficiencia y los costos." },
+
+{ question: "¿Qué se entiende por costes indirectos?", answers: ["Costes que pueden ser directamente imputados a un producto", "Costes que no pueden ser directamente atribuibles a la producción", "Costes relacionados con la fabricación de productos específicos"], correctAnswer: 1, justification: "Los costes indirectos son aquellos que no se pueden asignar directamente a un producto, como los gastos generales de administración o alquiler." },
+
+{ question: "¿Cuál es el objetivo de la gestión de inventarios?", answers: ["Asegurar que los productos estén disponibles cuando se necesiten y minimizar los costos asociados", "Aumentar la cantidad de productos almacenados", "Reducir al mínimo la inversión en materias primas"], correctAnswer: 0, justification: "El objetivo de la gestión de inventarios es equilibrar la disponibilidad de productos con la minimización de costos de almacenamiento." },
+
+{ question: "¿Qué es la productividad parcial?", answers: ["Es la relación entre la producción obtenida y la cantidad de uno solo de los factores utilizados", "Es la relación entre la producción obtenida y todos los factores empleados", "Es el rendimiento de la maquinaria en un periodo específico"], correctAnswer: 0, justification: "La productividad parcial mide la eficiencia de un único factor de producción, como el trabajo o los materiales." },
+
+{ question: "¿Qué rol juega el coste de oportunidad en la toma de decisiones productivas?", answers: ["Es el coste relacionado con las alternativas que no se eligen al tomar una decisión", "Es el coste de los materiales", "Es el coste de los salarios de los empleados"], correctAnswer: 0, justification: "El coste de oportunidad es el valor de la oportunidad perdida cuando se elige una opción sobre otra en el proceso de toma de decisiones." },
+
+{ question: "¿Qué implica la estrategia de producción continua?", answers: ["Producir sin interrupciones y sin cambios en el proceso", "Producir solo bajo pedido", "Producir con interrupciones periódicas para cambiar las características del producto"], correctAnswer: 0, justification: "La producción continua se caracteriza por operar sin interrupciones, lo cual es común en la producción de bienes estandarizados en grandes volúmenes." },
+
+{ question: "¿Cómo se calcula la productividad de los trabajadores?", answers: ["Producción obtenida / Número de trabajadores empleados", "Producción obtenida / Cantidad de materias primas utilizadas", "Coste total / Producción obtenida"], correctAnswer: 0, justification: "La productividad de los trabajadores se calcula dividiendo la producción obtenida entre el número de trabajadores empleados." },
+
+{ question: "¿Qué implica la localización de los puntos de venta?", answers: ["Elegir el lugar basado en la proximidad a los clientes y la accesibilidad", "Seleccionar el lugar basado solo en los costos de alquiler", "Elegir ubicaciones aleatorias para diversificar la red"], correctAnswer: 0, justification: "La localización de los puntos de venta debe considerar factores como la proximidad a los clientes, accesibilidad y las características del local, para optimizar el acceso al mercado." },
+
+{ question: "¿Qué factor no se considera un coste fijo?", answers: ["Alquiler de maquinaria", "Salarios del personal administrativo", "Materias primas"], correctAnswer: 2, justification: "Las materias primas son un coste variable, ya que su coste cambia dependiendo del volumen de producción." },
+
+{ question: "¿Qué significa el término 'economías de escala'?", answers: ["Reducción de costos por un aumento en la producción", "Incremento de costos al producir en grandes volúmenes", "La misma producción con menos trabajadores"], correctAnswer: 0, justification: "Las economías de escala se refieren a la reducción de costos unitarios a medida que aumenta el volumen de producción." },
+
+{ question: "¿Qué tipo de estrategia es más adecuada para empresas que producen en grandes volúmenes?", answers: ["Estrategia de producción continua", "Estrategia de producción por lotes", "Estrategia de producción personalizada"], correctAnswer: 0, justification: "La estrategia de producción continua es adecuada para empresas que producen grandes volúmenes de productos estandarizados sin interrupciones." },
+
+{ question: "¿Cuál es el objetivo principal de la planificación de la producción?", answers: ["Asegurar la disponibilidad de materiales en todo momento", "Coordinar el trabajo de los empleados", "Cumplir con la demanda del mercado al menor costo posible"], correctAnswer: 2, justification: "El objetivo principal de la planificación de la producción es cumplir con la demanda del mercado al menor costo posible, asegurando eficiencia y rentabilidad." },
+
+{ question: "¿Qué tipo de costes aumenta a medida que la producción se incrementa?", answers: ["Costes fijos", "Costes variables", "Costes totales"], correctAnswer: 1, justification: "Los costes variables aumentan con el volumen de producción, ya que están directamente relacionados con la cantidad de bienes producidos." },
+
+{ question: "¿Qué es el coste de oportunidad en el contexto de la producción?", answers: ["El coste de producir una unidad adicional", "El valor de lo que se pierde al elegir una alternativa sobre otra", "El coste de las materias primas"], correctAnswer: 1, justification: "El coste de oportunidad es el valor de la mejor alternativa sacrificada al tomar una decisión de producción." },
+
+{ question: "¿Qué tipo de decisión implica la elección de la localización de una planta de producción?", answers: ["Decisión operativa", "Decisión estratégica", "Decisión táctica"], correctAnswer: 1, justification: "La localización de una planta es una decisión estratégica, ya que tiene un impacto a largo plazo en los costos y la eficiencia de la empresa." },
+
+{ question: "¿Cuál es una ventaja de las empresas grandes respecto a las pequeñas?", answers: ["Mayor flexibilidad en la toma de decisiones", "Mejor acceso a fuentes de financiación", "Menores costos de producción"], correctAnswer: 1, justification: "Las empresas grandes suelen tener mejor acceso a fuentes de financiación debido a su tamaño y estabilidad financiera." },
+
+{ question: "¿Qué es el punto muerto en la producción?", answers: ["El nivel de producción en el que los ingresos cubren exactamente los costos", "El punto en el que la producción se detiene debido a la falta de recursos", "El nivel de producción máximo alcanzable"], correctAnswer: 0, justification: "El punto muerto es el nivel de producción en el que los ingresos totales cubren los costos totales, sin generar ganancias ni pérdidas." },
+
+{ question: "¿Cuál es el principal objetivo de la gestión de inventarios?", answers: ["Minimizar los costes de almacenamiento", "Asegurar la continuidad en la producción", "Reducir la cantidad de productos almacenados"], correctAnswer: 1, justification: "El principal objetivo de la gestión de inventarios es asegurar que los materiales estén disponibles para la producción sin interrumpir el proceso, mientras se controlan los costos asociados." },
+
+{ question: "¿Qué tipo de costes son los salarios de los operarios en una línea de producción?", answers: ["Costes variables y directos", "Costes fijos y directos", "Costes variables e indirectos"], correctAnswer: 0, justification: "Los salarios de los operarios son un coste variable porque dependen del nivel de producción, y son directos porque se pueden asignar directamente a la producción." },
+
+{ question: "¿Cómo se determina el coste medio de producción?", answers: ["Dividiendo el coste total por el número de unidades producidas", "Sumando los costes fijos y variables", "Multiplicando el coste de los materiales por la cantidad producida"], correctAnswer: 0, justification: "El coste medio de producción se calcula dividiendo el coste total entre el número de unidades producidas." },
+
+{ question: "¿Qué estrategia de producción es más adecuada para productos estandarizados de alta demanda?", answers: ["Producción por lotes", "Producción continua", "Producción personalizada"], correctAnswer: 1, justification: "La producción continua es adecuada para productos estandarizados de alta demanda, ya que permite una producción eficiente sin interrupciones." },
+
+{ question: "¿Qué factores son determinantes para la localización de una fábrica?", answers: ["Costos de mano de obra, proximidad a los proveedores y mercado", "Ubicación en una zona libre de impuestos", "Proximidad a la competencia"], correctAnswer: 0, justification: "La localización de una fábrica depende de factores como los costos de mano de obra, la proximidad a los proveedores y la demanda del mercado." },
+
+{ question: "¿Qué es un coste variable medio?", answers: ["El coste total de producción dividido por el número de unidades producidas", "El coste variable por unidad de producción", "El coste de las materias primas utilizadas en la producción"], correctAnswer: 1, justification: "El coste variable medio es el coste variable por unidad de producción, es decir, el costo que varía con la cantidad producida." },
+
+{ question: "¿Qué significa 'economías de alcance' en la producción?", answers: ["Reducción de costos al producir productos similares", "Reducción de costos al diversificar productos y servicios", "Aumento de la producción sin aumentar los costos"], correctAnswer: 1, justification: "Las economías de alcance se producen cuando una empresa reduce sus costos al diversificar sus productos o servicios, aprovechando los recursos comunes entre ellos." },
+
+{ question: "¿Qué es la productividad global?", answers: ["La relación entre producción obtenida y los trabajadores empleados", "La relación entre la producción total y todos los factores utilizados", "La relación entre las unidades producidas y el tiempo de trabajo empleado"], correctAnswer: 1, justification: "La productividad global mide la relación entre la producción total obtenida y todos los factores empleados en su creación." },
+
+{ question: "¿Qué implican los costes de oportunidad en la gestión de producción?", answers: ["Decidir entre diferentes alternativas de inversión y producción", "Calcular la cantidad de recursos necesarios para cada proceso", "Medir los resultados de la productividad global"], correctAnswer: 0, justification: "Los costes de oportunidad en la producción se refieren al valor de lo que se sacrifica al elegir una opción sobre otra, como en la elección entre diferentes métodos de producción." },
+
+{ question: "¿Qué tipo de empresa es más propensa a beneficiarse de economías de escala?", answers: ["Empresas grandes que producen en masa", "Empresas pequeñas que ofrecen productos personalizados", "Empresas que operan en mercados locales"], correctAnswer: 0, justification: "Las empresas grandes que producen en grandes volúmenes se benefician de las economías de escala, ya que pueden reducir los costos unitarios a medida que aumenta la producción." },
+
+{ question: "¿Cuál es el impacto de la subcontratación en la producción?", answers: ["Aumenta los costos operativos", "Reduce la capacidad de control sobre el proceso de producción", "Mejora la eficiencia al reducir el número de empleados internos"], correctAnswer: 2, justification: "La subcontratación puede mejorar la eficiencia al permitir a las empresas enfocarse en sus competencias clave y reducir el número de empleados internos." }
+
+
+        ];
+
+        function renderQuestions() {
+            const questionContainer = document.getElementById("questions");
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement("div");
+                questionElement.classList.add("question");
+
+                const questionText = document.createElement("p");
+                questionText.innerText = `${index + 1}. ${question.question}`;
+                questionElement.appendChild(questionText);
+
+                question.answers.forEach((answer, i) => {
+                    const label = document.createElement("label");
+                    label.innerHTML = `
+                        <input type="radio" name="q${index}" value="${i}" onclick="checkAnswer(${index}, ${i})">
+                        ${answer}
+                    `;
+                    questionElement.appendChild(label);
+                    questionElement.appendChild(document.createElement("br"));
+                });
+
+                questionElement.appendChild(document.createElement("div"));
+                questionContainer.appendChild(questionElement);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedValue) {
+            const question = questions[questionIndex];
+            const responseElement = document.createElement("div");
+            const questionElement = document.getElementsByClassName("question")[questionIndex];
+            
+            const feedback = questionElement.getElementsByTagName("div")[0];
+            feedback.innerHTML = ""; // Limpiar feedback anterior
+
+            if (selectedValue === question.correctAnswer) {
+                feedback.classList.add("correct");
+                feedback.innerText = `Correcto: ${question.justification}`;
+            } else {
+                feedback.classList.add("incorrect");
+                feedback.innerText = `Incorrecto. ${question.justification}`;
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            questions.forEach((question, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedAnswer !== null) {
+                    const answerValue = parseInt(selectedAnswer.value);
+                    if (answerValue === question.correctAnswer) {
+                        score += 0.5;
+                    } else {
+                        score -= 0.5;
+                    }
+                }
+            });
+
+            const totalScore = document.createElement("p");
+            totalScore.innerText = `Nota final: ${score.toFixed(2)} / 10`;
+            const button = document.createElement("button");
+            button.classList.add("btn");
+            button.innerText = "Corregir";
+            button.onclick = () => location.reload();
+            document.getElementById("result").appendChild(totalScore);
+            document.getElementById("result").appendChild(button);
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
